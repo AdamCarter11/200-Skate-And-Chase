@@ -10,11 +10,15 @@ public class Player : MonoBehaviour
     [SerializeField] float jumpGroundThreshold = 1;
     [SerializeField] float jumpVelocity;
     [SerializeField] float groundHeight;
+    [SerializeField] float acceleration;
+    [SerializeField] float maxAccel;
+    [SerializeField] float maxVelocity;
+    [HideInInspector] public float dist;
+    [HideInInspector] public Vector2 velocity;
     private bool isGrounded;
-    private bool isHoldingJump;
-    private Vector2 velocity;
+    private bool isHoldingJump; 
     private float holdJumpTimer = 0;
-    
+   
     void Start()
     {
         
@@ -22,6 +26,7 @@ public class Player : MonoBehaviour
 
     void Update()
     {
+        //triggering the jump
         Vector2 pos = transform.position;
         float groundDist = Mathf.Abs(pos.y-groundHeight);
         if(isGrounded || groundDist <= jumpGroundThreshold){
@@ -35,9 +40,13 @@ public class Player : MonoBehaviour
         if(Input.GetKeyUp(KeyCode.Space)){
             isHoldingJump = false;
         }
+
+
     }
 
     private void FixedUpdate() {
+        dist += velocity.x * Time.fixedDeltaTime;
+        //actually doing the jump
         Vector2 pos = transform.position;
         if(!isGrounded){
             if(isHoldingJump){
@@ -55,6 +64,18 @@ public class Player : MonoBehaviour
                 isGrounded = true;
             }
         }
+
+        if(isGrounded){
+            float velocityRatio = velocity.x / maxVelocity;
+            acceleration = maxAccel * (1 - velocityRatio);
+            velocity.x += acceleration * Time.fixedDeltaTime;
+            
+            if(velocity.x >= maxVelocity){
+                velocity.x = maxVelocity;
+            }
+        }
         transform.position = pos;
+
+
     }
 }
