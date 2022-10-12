@@ -18,7 +18,13 @@ public class Player : MonoBehaviour
     private bool isGrounded;
     private bool isHoldingJump; 
     private float holdJumpTimer = 0;
-   
+
+    //sequence (combo) variables
+    private KeyCode[] keys = {KeyCode.Q, KeyCode.W, KeyCode.E, KeyCode.A, KeyCode.S, KeyCode.D};
+    private KeyCode[] sequence = new KeyCode[3];
+    private int whichKeys1, whichKeys2, whichKeys3;
+    int sequenceCounter = 0;
+
     void Start()
     {
         
@@ -35,12 +41,36 @@ public class Player : MonoBehaviour
                 velocity.y = jumpVelocity;
                 isHoldingJump = true;
                 holdJumpTimer = 0;
+                whichKeys1 = Random.Range(0,keys.Length);
+                whichKeys2 = Random.Range(0,keys.Length);
+                whichKeys3 = Random.Range(0,keys.Length);
+                sequence[0] = keys[whichKeys1];
+                sequence[1] = keys[whichKeys2];
+                sequence[2] = keys[whichKeys3];
+                //sequenceCounter = 0;
+                //print(sequence.Length);
+                print(sequence[0] + " " + sequence[1] + " " + sequence[2]);
             }
         }
         if(Input.GetKeyUp(KeyCode.Space)){
             isHoldingJump = false;
         }
 
+        //trigger quick time event (combo/trick system)
+        if(Input.GetKeyDown(sequence[sequenceCounter])){
+            print("Key pressed");
+            sequenceCounter++;
+            print(sequenceCounter);
+            if(sequenceCounter == sequence.Length){
+                //sequence met
+                print("COMBO ACTIVATED");
+                sequenceCounter = 0;
+            }
+        }
+        else if(Input.anyKeyDown){
+            sequenceCounter = 0;
+            print("Reset sequence");
+        }
 
     }
 
@@ -60,8 +90,10 @@ public class Player : MonoBehaviour
                 velocity.y += gravity * Time.fixedDeltaTime;
             }
             if(pos.y <= groundHeight){
+                //Register that you have touched the ground (reset jump)
                 pos.y = groundHeight;
                 isGrounded = true;
+                sequenceCounter = 0;
             }
         }
 
