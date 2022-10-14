@@ -32,15 +32,17 @@ public class Player : MonoBehaviour
     [SerializeField] Camera cam;
     [SerializeField] float zoomIn, zoomOut;
     private float startinCamSize;
+    private Vector3 startCamPos;
 
     [SerializeField] float knockbackVal;
     [SerializeField] float knockBackSpeed;
-    private bool hit = false;
+    private bool hit = false, hitTimer = false;
     Vector2 tempVec;
 
     void Start()
     {
         startinCamSize = cam.orthographicSize;
+        startCamPos = cam.transform.position;
     }
 
     void Update()
@@ -49,7 +51,7 @@ public class Player : MonoBehaviour
         Vector2 pos = transform.position;
         float groundDist = Mathf.Abs(pos.y-groundHeight);
         if(isGrounded || groundDist <= jumpGroundThreshold){
-            if(Input.GetKeyDown(KeyCode.Space)){
+            if(Input.GetKeyDown(KeyCode.Space) && !hitTimer){
                 isGrounded = false;
                 velocity.y = jumpVelocity;
                 isHoldingJump = true;
@@ -135,6 +137,7 @@ public class Player : MonoBehaviour
             }
             cam.orthographicSize = Mathf.Lerp(cam.orthographicSize, startinCamSize, Time.deltaTime*zoomOut);
             cam.transform.position = new Vector3(Mathf.Lerp(cam.transform.position.x, 0, Time.deltaTime*zoomOut), 0, -10);
+            cam.transform.position = new Vector3(cam.transform.position.x, startCamPos.y, cam.transform.position.z);
         }
         transform.position = pos;
     }
@@ -145,7 +148,14 @@ public class Player : MonoBehaviour
             cam.GetComponent<ScreenShake>().TriggerShake();
             cam.GetComponent<ScreenShake>().initialPos = cam.transform.position;
             hit = true;
+            StartCoroutine(JumpDelay());
             tempVec = transform.position;
+            Destroy(other.gameObject);
         }
+    }
+    IEnumerator JumpDelay(){
+        hitTimer = true;
+        yield return new WaitForSeconds(.5f);
+        hitTimer = false;
     }
 }

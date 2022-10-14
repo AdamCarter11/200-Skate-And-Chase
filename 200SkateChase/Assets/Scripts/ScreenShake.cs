@@ -32,6 +32,6 @@ public class ScreenShake : MonoBehaviour
         }
     }
     public void TriggerShake(){
-        shakeDuration = 1f;
+        shakeDuration = .5f;
     }
 }

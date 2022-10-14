@@ -420,7 +420,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gravity: -50
   maxJumpHold: 0.1
-  jumpGroundThreshold: 2
+  jumpGroundThreshold: 1
   jumpVelocity: 15
   groundHeight: 0
   acceleration: 10
