@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class Player : MonoBehaviour
 {
@@ -33,20 +35,88 @@ public class Player : MonoBehaviour
     [SerializeField] float zoomIn, zoomOut;
     private float startinCamSize;
     private Vector3 startCamPos;
-
+    //Damage variables
     [SerializeField] float knockbackVal;
     [SerializeField] float knockBackSpeed;
-    private bool hit = false, hitTimer = false;
+    [SerializeField] float moveForwardVal;
+    [SerializeField] float moveForwardSpeed;
+    [SerializeField] GameObject explosionEffect;
+    [SerializeField] Text comboText;
+    private bool hit = false, hitTimer = false, landed = false;
     Vector2 tempVec;
+    private int combCount = 0;
+    [SerializeField] GameObject enemyObj;
 
     void Start()
     {
+        //initially setting the cameras size and position
+        //(we will be changing later so we want to have a default to fall back on)
         startinCamSize = cam.orthographicSize;
         startCamPos = cam.transform.position;
     }
 
     void Update()
     {
+        //all the jumping logic
+        jumpingFunc();
+
+        //all the logic behind keeping track of the players trick and combo
+        comboFunc();
+
+        //logic behind what happens when the player gets hit
+        damageFunc();
+
+        //progress function (move forward)
+        moveForward();
+
+        //GameOver logic
+        checkGameOver();
+
+        //win logic
+        checkWin();
+    }
+
+    private void FixedUpdate() {
+        activateJump();
+    }
+
+    //Checks for collision with obstacle (NOTICE HOW ITS TRIGGER)
+    private void OnTriggerEnter2D(Collider2D other) {
+        if(other.gameObject.CompareTag("Obs")){
+            //effects the velocity display
+            velocity.x = Mathf.Lerp(velocity.x, -5f, 2);
+
+            //used for the camera shake
+            cam.GetComponent<ScreenShake>().TriggerShake();
+            cam.GetComponent<ScreenShake>().initialPos = cam.transform.position;
+
+            //used to represent being hit
+            tempVec = transform.position;
+            hit = true;
+            combCount = 0;
+            comboText.color = Color.black;
+            comboText.text = "Combo: " + combCount;
+            StartCoroutine(JumpDelay());
+            
+
+            //creates particle effect and then destroys the obstacle that hit the player
+            Instantiate(explosionEffect, other.transform.position, Quaternion.identity);
+            Destroy(other.gameObject);
+        }
+
+    }
+
+    //used to prevent the player from jumping for a little bit after getting hit
+    IEnumerator JumpDelay(){
+        hitTimer = true;
+        yield return new WaitForSeconds(.5f);
+        hitTimer = false;
+    }
+
+    /*      UPDATE FUNCTIONS
+    *
+    */
+    void jumpingFunc(){
         //triggering the jump
         Vector2 pos = transform.position;
         float groundDist = Mathf.Abs(pos.y-groundHeight);
@@ -70,7 +140,9 @@ public class Player : MonoBehaviour
         if(Input.GetKeyUp(KeyCode.Space)){
             isHoldingJump = false;
         }
+    }
 
+    void comboFunc(){
         //trigger quick time event (combo/trick system)
         if(Input.GetKeyDown(sequence[sequenceCounter])){
             //print("Key pressed");
@@ -79,24 +151,73 @@ public class Player : MonoBehaviour
             if(sequenceCounter == sequence.Length){
                 //sequence met
                 print("COMBO ACTIVATED");
+                combCount++;
+                if(combCount >= 1){
+                    float tempColorVal = combCount * .1f;;
+                    print(tempColorVal);
+                    if(tempColorVal > 1){
+                        tempColorVal = 1;
+                    }
+                    comboText.color = new Color(tempColorVal, tempColorVal, 0);
+                }
+                else{
+                    comboText.color = Color.black;
+                }
+                comboText.text = "Combo: " + combCount;
+                tempVec = transform.position;
+                landed = true;
                 sequenceCounter = 0;
             }
         }
-        else if(Input.anyKeyDown){
+        else if(!Input.GetKeyDown(KeyCode.Space) && Input.anyKeyDown){
             sequenceCounter = 0;
+            combCount = 0;
+            comboText.color = Color.black;
+            comboText.text = "Combo: " + combCount;
             print("Reset sequence");
         }
+    }
+
+    void damageFunc(){
         if(hit){
-            transform.position = Vector3.MoveTowards(transform.position, new Vector3(tempVec.x-knockbackVal, tempVec.y, transform.position.z), Time.deltaTime*knockBackSpeed);
-            //transform.position = Vector3.Lerp(tempVec, new Vector2(tempVec.x-4, tempVec.y), Time.deltaTime * 2);
-            if(transform.position.x <= tempVec.x - 4f){
+            transform.position = Vector3.MoveTowards(transform.position, new Vector3(tempVec.x-knockbackVal, transform.position.y, transform.position.z), Time.deltaTime*knockBackSpeed);
+            if(transform.position.x == tempVec.x - knockbackVal){
                 hit = false;
-                print("FINISH HIT");
             }
         }
     }
 
-    private void FixedUpdate() {
+    void moveForward(){
+        if(landed){
+            transform.position = Vector3.MoveTowards(transform.position, new Vector3(tempVec.x+moveForwardVal, transform.position.y, transform.position.z), Time.deltaTime*moveForwardSpeed);
+            if(transform.position.x == tempVec.x + moveForwardVal){
+                landed = false;
+            }
+        }
+    }
+
+    void checkGameOver(){
+        if(transform.position.x < -18){
+            print("GAME OVER");
+            SceneManager.LoadScene("GameOver");
+        }
+    }
+
+    void checkWin(){
+        if(transform.position.x >= enemyObj.transform.position.x){
+            //win stats
+            print("YOU WIN");
+            int tempWinCount = PlayerPrefs.GetInt("Wins");
+            tempWinCount++;
+            PlayerPrefs.SetInt("Wins", tempWinCount);
+            SceneManager.LoadScene("WinScreen");
+        }
+    }
+
+    /*     FIXED UPDATE FUNCTIONS
+    *
+    */
+    void activateJump(){
         dist += velocity.x * Time.fixedDeltaTime;
         //actually doing the jump
         Vector2 pos = transform.position;
@@ -140,22 +261,5 @@ public class Player : MonoBehaviour
             cam.transform.position = new Vector3(cam.transform.position.x, startCamPos.y, cam.transform.position.z);
         }
         transform.position = pos;
-    }
-    private void OnTriggerEnter2D(Collider2D other) {
-        if(other.gameObject.CompareTag("Obs")){
-            //print("Collision");
-            velocity.x = Mathf.Lerp(velocity.x, -5f, 2);
-            cam.GetComponent<ScreenShake>().TriggerShake();
-            cam.GetComponent<ScreenShake>().initialPos = cam.transform.position;
-            hit = true;
-            StartCoroutine(JumpDelay());
-            tempVec = transform.position;
-            Destroy(other.gameObject);
-        }
-    }
-    IEnumerator JumpDelay(){
-        hitTimer = true;
-        yield return new WaitForSeconds(.5f);
-        hitTimer = false;
     }
 }
