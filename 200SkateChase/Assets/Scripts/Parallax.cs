@@ -13,11 +13,11 @@ public class Parallax : MonoBehaviour
 
     //Depth controls the speed (closer to 0, the faster it goes)
     [SerializeField] float depth = 1;
-    private Player player;
+    private Playerv2 player;
 
     //used to set the background to move according to the player
     private void Awake() {
-        player = GameObject.Find("Player").GetComponent<Player>();
+        player = GameObject.Find("Player").GetComponent<Playerv2>();
     }
 
     void FixedUpdate()
