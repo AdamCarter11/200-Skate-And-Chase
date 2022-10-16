@@ -5,12 +5,12 @@ using UnityEngine.UI;
 
 public class UIController : MonoBehaviour
 {
-    private Player player;
+    private Playerv2 player;
     private Text distText;
     
     void Start()
     {
-        player = GameObject.Find("Player").GetComponent<Player>();
+        player = GameObject.Find("Player").GetComponent<Playerv2>();
         distText = GameObject.Find("DistanceText").GetComponent<Text>();
     }
 
