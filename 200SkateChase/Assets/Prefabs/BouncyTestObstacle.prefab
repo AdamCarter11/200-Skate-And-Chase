@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 7942397694414895346}
   - component: {fileID: 4056065027453976803}
   - component: {fileID: 3268721609105593613}
+  - component: {fileID: -3283478719280829498}
   - component: {fileID: -5705201883528547476}
   m_Layer: 0
   m_Name: BouncyTestObstacle
@@ -122,6 +123,22 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
+--- !u!58 &-3283478719280829498
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3580582078166305275}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  serializedVersion: 2
+  m_Radius: 0.5
 --- !u!114 &-5705201883528547476
 MonoBehaviour:
   m_ObjectHideFlags: 0
