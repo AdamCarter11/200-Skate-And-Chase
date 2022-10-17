@@ -12,9 +12,9 @@ GameObject:
   - component: {fileID: 7942397694414895346}
   - component: {fileID: 4056065027453976803}
   - component: {fileID: 3268721609105593613}
-  - component: {fileID: 1231473546337422195}
+  - component: {fileID: -5705201883528547476}
   m_Layer: 0
-  m_Name: TestObstacle
+  m_Name: BouncyTestObstacle
   m_TagString: Obs
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -109,20 +109,20 @@ Rigidbody2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3580582078166305275}
-  m_BodyType: 1
+  m_BodyType: 0
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
   m_Mass: 1
   m_LinearDrag: 0
   m_AngularDrag: 0.05
-  m_GravityScale: 1
+  m_GravityScale: 5
   m_Material: {fileID: 0}
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
---- !u!114 &1231473546337422195
+--- !u!114 &-5705201883528547476
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -131,6 +131,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 3580582078166305275}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: af7d4be545a6a284eb4f472481ad421b, type: 3}
+  m_Script: {fileID: 11500000, guid: 6fec95afa6ed00e448e9774924260813, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  velo: 15
