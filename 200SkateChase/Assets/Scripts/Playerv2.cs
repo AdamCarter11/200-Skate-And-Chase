@@ -17,6 +17,7 @@ public class Playerv2 : MonoBehaviour
     [SerializeField] float acceleration;
     [SerializeField] float maxAccel;
     [SerializeField] float maxVelocity;
+    [SerializeField] float comboTime;
     [SerializeField] float crouchTime;
     [SerializeField] float crouchPosY;
     [SerializeField] float crouchLerpCoef;
@@ -133,6 +134,12 @@ public class Playerv2 : MonoBehaviour
         hitTimer = false;
     }
 
+    IEnumerator comboTimer() {
+        yield return new WaitForSecondsRealtime(comboTime);
+        inCombo = false;
+        Debug.Log("Combo Ended with no Input");
+    }
+
     /*      UPDATE FUNCTIONS
     *
     */
@@ -203,6 +210,15 @@ public class Playerv2 : MonoBehaviour
     {
         if (inCombo)
         {
+            //If do nothing end combo
+            /*comboTimer += Time.fixedUnscaledDeltaTime;
+            if (comboTimer >= comboTime)
+            {
+                Debug.Log("Combo Ended with no Input");
+                comboTimer = 0;
+                inCombo = false;
+            }*/
+
             //trigger quick time event (combo/trick system) and record input one by one using sequence
             if (Input.GetKeyDown(keys[0]) || Input.GetKeyDown(keys[1]) || Input.GetKeyDown(keys[2]) || Input.GetKeyDown(keys[3]) || Input.GetKeyDown(keys[4]) || Input.GetKeyDown(keys[5]))
             {
@@ -280,18 +296,20 @@ public class Playerv2 : MonoBehaviour
                     }
                     inCombo = false;
                     sequenceCounter = 0;
+                    StopCoroutine(comboTimer());
                 }
             }
             else if (Input.anyKeyDown)
             {
+                inCombo = false;
                 sequenceCounter = 0;
                 combCount = 0;
                 comboText.color = Color.black;
                 comboText.text = "Combo: " + combCount;
                 print("Reset sequence");
+                StopCoroutine(comboTimer());
             }
         }
-        
     }
 
     void damageFunc(){
@@ -313,10 +331,11 @@ public class Playerv2 : MonoBehaviour
     }
 
     public void InitCombo(){
-        if(isGrounded && !isCrouching)
+        if(!inCombo && isGrounded && !isCrouching)
         {
             inCombo = true;
             print("Perform the combo now!");
+            StartCoroutine(comboTimer());
         }
     }
 
