@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 273703290732890221}
   - component: {fileID: 7942397694414895346}
   - component: {fileID: 4056065027453976803}
+  - component: {fileID: -5221412132581145823}
   - component: {fileID: 3268721609105593613}
   - component: {fileID: 1231473546337422195}
   m_Layer: 0
@@ -94,6 +95,22 @@ CircleCollider2D:
   m_GameObject: {fileID: 3580582078166305275}
   m_Enabled: 1
   m_Density: 1
+  m_Material: {fileID: 6200000, guid: 47f606f3b414a3e4cbe291ca0844448a, type: 2}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  serializedVersion: 2
+  m_Radius: 0.5
+--- !u!58 &-5221412132581145823
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3580582078166305275}
+  m_Enabled: 1
+  m_Density: 1
   m_Material: {fileID: 0}
   m_IsTrigger: 1
   m_UsedByEffector: 0
@@ -134,4 +151,3 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: af7d4be545a6a284eb4f472481ad421b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  obsSpeed: 10
