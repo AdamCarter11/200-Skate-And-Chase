@@ -59,9 +59,9 @@ public class Playerv2 : MonoBehaviour
     [SerializeField] GameObject enemyObj;
 
     //get sound and audio related components
-    public AudioClip hurtSound;
-    public AudioClip comboSound;
-    public int pitchIncrement = 5;
+    [SerializeField] AudioClip hurtSound;
+    [SerializeField] AudioClip comboSound;
+    [SerializeField] int pitchIncrement = 5;
 
     private AudioSource aS;
     private int startingPitch;
@@ -189,7 +189,7 @@ public class Playerv2 : MonoBehaviour
                 print("COMBO ACTIVATED");
                 combCount++;
                 aS.PlayOneShot(comboSound);
-                aS.pitch = aS.pitch + pitchIncrement
+                aS.pitch = aS.pitch + pitchIncrement;
                 if(combCount >= 1){
                     float tempColorVal = combCount * .1f;;
                     print(tempColorVal);
