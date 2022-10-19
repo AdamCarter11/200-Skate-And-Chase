@@ -58,12 +58,18 @@ public class Playerv2 : MonoBehaviour
     private int combCount = 0;
     [SerializeField] GameObject enemyObj;
 
+    //get hit sound and components
+    public AudioClip hurtSound;
+    private AudioSource aS;
+
     void Start()
     {
         //initially setting the cameras size and position
         //(we will be changing later so we want to have a default to fall back on)
         startinCamSize = cam.orthographicSize;
         startCamPos = cam.transform.position;
+        //get audio source for hit sound
+        aS = this.GetComponent<AudioSource>();
     }
 
     void Update()
@@ -122,6 +128,9 @@ public class Playerv2 : MonoBehaviour
             //creates particle effect and then destroys the obstacle that hit the player
             Instantiate(explosionEffect, other.transform.position, Quaternion.identity);
             Destroy(other.gameObject);
+            //plays sound of player getting hit
+            aS.PlayOneShot(hurtSound);
+
         }
 
     }
