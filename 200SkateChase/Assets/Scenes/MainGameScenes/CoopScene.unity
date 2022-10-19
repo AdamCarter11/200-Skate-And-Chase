@@ -616,6 +616,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   obstacle: {fileID: 3580582078166305275, guid: bde01906862ae7e43b7e68009e49606f, type: 3}
   obstacle2: {fileID: 3580582078166305275, guid: 523e8805c75b745409f64aa05ece3b4e, type: 3}
+  obstacle3: {fileID: 3580582078166305275, guid: 997a8ebde1a401742a687f9fc0a6034b, type: 3}
+  player1: {fileID: 1058196540}
 --- !u!1 &656783247
 GameObject:
   m_ObjectHideFlags: 0

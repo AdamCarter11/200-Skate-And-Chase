@@ -29,6 +29,7 @@ public class Playerv2 : MonoBehaviour
     private bool isHoldingJump; 
     private float holdJumpTimer = 0;
     private float crouchTimer = 0;
+    private float comboTimer = 0;
 
     //sequence (combo) variables
     [Header("Sequence Variables")]
@@ -119,7 +120,6 @@ public class Playerv2 : MonoBehaviour
             // if in combo reset combo cam
             inCombo = false;
 
-
             //creates particle effect and then destroys the obstacle that hit the player
             Instantiate(explosionEffect, other.transform.position, Quaternion.identity);
             Destroy(other.gameObject);
@@ -134,11 +134,11 @@ public class Playerv2 : MonoBehaviour
         hitTimer = false;
     }
 
-    IEnumerator comboTimer() {
+   /* IEnumerator comboTimer() {
         yield return new WaitForSecondsRealtime(comboTime);
         inCombo = false;
         Debug.Log("Combo Ended with no Input");
-    }
+    }*/
 
     /*      UPDATE FUNCTIONS
     *
@@ -196,7 +196,8 @@ public class Playerv2 : MonoBehaviour
                 sequenceCounter = 0;
             }
         }
-        else if(!Input.GetKeyDown(KeyCode.Space) && Input.anyKeyDown){
+        else if(!Input.GetKeyDown(KeyCode.Space) && Input.anyKeyDown && !Input.GetKeyDown(KeyCode.Mouse0) && !Input.GetKeyDown(KeyCode.Mouse1) && !Input.GetKeyDown(KeyCode.Mouse2) && !Input.GetKeyDown(KeyCode.Mouse3) && !Input.GetKeyDown(KeyCode.Mouse4) && !Input.GetKeyDown(KeyCode.Mouse5) && !Input.GetKeyDown(KeyCode.Mouse6))
+        {
             sequenceCounter = 0;
             combCount = 0;
             comboText.color = Color.black;
@@ -211,13 +212,13 @@ public class Playerv2 : MonoBehaviour
         if (inCombo)
         {
             //If do nothing end combo
-            /*comboTimer += Time.fixedUnscaledDeltaTime;
+            comboTimer += Time.fixedDeltaTime;
             if (comboTimer >= comboTime)
             {
                 Debug.Log("Combo Ended with no Input");
                 comboTimer = 0;
                 inCombo = false;
-            }*/
+            }
 
             //trigger quick time event (combo/trick system) and record input one by one using sequence
             if (Input.GetKeyDown(keys[0]) || Input.GetKeyDown(keys[1]) || Input.GetKeyDown(keys[2]) || Input.GetKeyDown(keys[3]) || Input.GetKeyDown(keys[4]) || Input.GetKeyDown(keys[5]))
@@ -296,18 +297,19 @@ public class Playerv2 : MonoBehaviour
                     }
                     inCombo = false;
                     sequenceCounter = 0;
-                    StopCoroutine(comboTimer());
+                    //StopCoroutine(comboTimer());
+                    comboTimer = 0;
                 }
             }
-            else if (Input.anyKeyDown)
+            else if (Input.anyKeyDown && !Input.GetKeyDown(KeyCode.Mouse0) && !Input.GetKeyDown(KeyCode.Mouse1) && !Input.GetKeyDown(KeyCode.Mouse2) && !Input.GetKeyDown(KeyCode.Mouse3) && !Input.GetKeyDown(KeyCode.Mouse4) && !Input.GetKeyDown(KeyCode.Mouse5) && !Input.GetKeyDown(KeyCode.Mouse6))
             {
                 inCombo = false;
                 sequenceCounter = 0;
                 combCount = 0;
                 comboText.color = Color.black;
                 comboText.text = "Combo: " + combCount;
-                print("Reset sequence");
-                StopCoroutine(comboTimer());
+                print("Reset sequence player 1");
+                //StopCoroutine(comboTimer());
             }
         }
     }
@@ -335,7 +337,8 @@ public class Playerv2 : MonoBehaviour
         {
             inCombo = true;
             print("Perform the combo now!");
-            StartCoroutine(comboTimer());
+            //StartCoroutine(comboTimer());
+            comboTimer = 0f;
         }
     }
 

@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 4056065027453976803}
   - component: {fileID: 3268721609105593613}
   - component: {fileID: -3283478719280829498}
-  - component: {fileID: -5705201883528547476}
+  - component: {fileID: -6729082191375960002}
   m_Layer: 0
   m_Name: BouncyTestObstacle
   m_TagString: Obs
@@ -139,7 +139,7 @@ CircleCollider2D:
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
   m_Radius: 0.5
---- !u!114 &-5705201883528547476
+--- !u!114 &-6729082191375960002
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -148,7 +148,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 3580582078166305275}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6fec95afa6ed00e448e9774924260813, type: 3}
+  m_Script: {fileID: 11500000, guid: af7d4be545a6a284eb4f472481ad421b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  obsType: 1
   velo: 15
+  switchTime: 2
