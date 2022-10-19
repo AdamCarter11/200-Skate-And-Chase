@@ -35,9 +35,8 @@ public class Player2Controller : MonoBehaviour
         //mouse lcick spawns objects at every 2 seconds interval
         if (Input.GetMouseButtonDown(0) && MouseClickInterval>2)
         {
-           
             print("MOUSE DOWN ");
-            GameObject tempObs = Instantiate(obstacle, transform.position, Quaternion.identity);
+            GameObject tempObs = Instantiate(obstacle, transform.position + new Vector3(0f,0.75f,0f), Quaternion.identity);
             
             MouseClickInterval = 0;
 
