@@ -61,10 +61,10 @@ public class Playerv2 : MonoBehaviour
     //get sound and audio related components
     [SerializeField] AudioClip hurtSound;
     [SerializeField] AudioClip comboSound;
-    [SerializeField] int pitchIncrement = 0.2;
+    [SerializeField] float pitchIncrement = 0.01f;
 
     private AudioSource aS;
-    private int startingPitch = 1;
+    private float startingPitch = 1f;
 
     void Start()
     {
@@ -169,7 +169,7 @@ public class Playerv2 : MonoBehaviour
                 sequence[1] = keys[whichKeys2];
                 sequence[2] = keys[whichKeys3];
                 //sequenceCounter = 0;
-                //print(sequence.Length);
+                print(sequence.Length);
                 print(sequence[0] + " " + sequence[1] + " " + sequence[2]);
             }
         }
@@ -188,8 +188,6 @@ public class Playerv2 : MonoBehaviour
                 //sequence met
                 print("COMBO ACTIVATED");
                 combCount++;
-                aS.PlayOneShot(comboSound);
-                aS.pitch = aS.pitch + pitchIncrement;
                 if(combCount >= 1){
                     float tempColorVal = combCount * .1f;;
                     print(tempColorVal);
@@ -277,6 +275,8 @@ public class Playerv2 : MonoBehaviour
                     if (comboMatch)
                     {
                         combCount++;
+                        aS.PlayOneShot(comboSound);
+                        aS.pitch += pitchIncrement;
                         if (combCount >= 1)
                         {
                             float tempColorVal = combCount * .1f; ;
