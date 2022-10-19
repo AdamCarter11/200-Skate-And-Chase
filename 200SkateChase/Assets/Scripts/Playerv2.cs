@@ -61,10 +61,10 @@ public class Playerv2 : MonoBehaviour
     //get sound and audio related components
     [SerializeField] AudioClip hurtSound;
     [SerializeField] AudioClip comboSound;
-    [SerializeField] int pitchIncrement = 5;
+    [SerializeField] int pitchIncrement = 0.2;
 
     private AudioSource aS;
-    private int startingPitch;
+    private int startingPitch = 1;
 
     void Start()
     {
