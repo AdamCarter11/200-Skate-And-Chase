@@ -123,7 +123,16 @@ public class Playerv2 : MonoBehaviour
             //creates particle effect and then destroys the obstacle that hit the player
             Instantiate(explosionEffect, other.transform.position, Quaternion.identity);
             Destroy(other.gameObject);
+        } 
+        else if(other.gameObject.CompareTag("GameOverObs"))
+        {
+            SceneManager.LoadScene("GameOver");
         }
+
+    }
+
+    private void OnCollisionEnter2D(Collision2D other)
+    {
 
     }
 

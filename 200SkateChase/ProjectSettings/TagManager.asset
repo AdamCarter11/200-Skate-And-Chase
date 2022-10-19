@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Obs
   - Enemy
+  - GameOverObs
   layers:
   - Default
   - TransparentFX
