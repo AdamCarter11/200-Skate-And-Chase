@@ -58,9 +58,13 @@ public class Playerv2 : MonoBehaviour
     private int combCount = 0;
     [SerializeField] GameObject enemyObj;
 
-    //get hit sound and components
+    //get sound and audio related components
     public AudioClip hurtSound;
+    public AudioClip comboSound;
+    public int pitchIncrement = 5;
+
     private AudioSource aS;
+    private int startingPitch;
 
     void Start()
     {
@@ -70,6 +74,7 @@ public class Playerv2 : MonoBehaviour
         startCamPos = cam.transform.position;
         //get audio source for hit sound
         aS = this.GetComponent<AudioSource>();
+        aS.pitch = startingPitch;
     }
 
     void Update()
@@ -128,7 +133,9 @@ public class Playerv2 : MonoBehaviour
             //creates particle effect and then destroys the obstacle that hit the player
             Instantiate(explosionEffect, other.transform.position, Quaternion.identity);
             Destroy(other.gameObject);
-            //plays sound of player getting hit
+
+            //plays sound of player getting hit and reset combo sound pitch
+            aS.pitch = startingPitch;
             aS.PlayOneShot(hurtSound);
 
         }
@@ -181,6 +188,8 @@ public class Playerv2 : MonoBehaviour
                 //sequence met
                 print("COMBO ACTIVATED");
                 combCount++;
+                aS.PlayOneShot(comboSound);
+                aS.pitch = aS.pitch + pitchIncrement
                 if(combCount >= 1){
                     float tempColorVal = combCount * .1f;;
                     print(tempColorVal);
