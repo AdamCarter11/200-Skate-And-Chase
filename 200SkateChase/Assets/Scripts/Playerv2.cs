@@ -9,6 +9,7 @@ public class Playerv2 : MonoBehaviour
 {
     //Jumping variables
     [Header("Jump variables")]
+    [SerializeField] float constantSpeed;
     [SerializeField] float gravity;
     [SerializeField] float maxJumpHold;
     [SerializeField] float jumpGroundThreshold = 1;
@@ -60,12 +61,15 @@ public class Playerv2 : MonoBehaviour
     private int combCount = 0;
     [SerializeField] GameObject enemyObj;
 
+    Animator playerAnim;
+
     void Start()
     {
         //initially setting the cameras size and position
         //(we will be changing later so we want to have a default to fall back on)
         startinCamSize = cam.orthographicSize;
         startCamPos = cam.transform.position;
+        playerAnim = GetComponent<Animator>();
     }
 
     void Update()
@@ -97,11 +101,18 @@ public class Playerv2 : MonoBehaviour
         jumpHandler();
         crouchHandler();
         cameraHandler();
+        if(!comboMove){
+            transform.position += Vector3.right * constantSpeed * Time.deltaTime;
+        }
+        
     }
 
     //Checks for collision with obstacle (NOTICE HOW ITS TRIGGER)
     private void OnTriggerEnter2D(Collider2D other) {
         if(other.gameObject.CompareTag("Obs")){
+            //StopCoroutine(comboTimerV2());
+            //endCombo = false;
+
             //effects the velocity display
             velocity.x = Mathf.Lerp(velocity.x, -5f, 2);
 
@@ -110,6 +121,7 @@ public class Playerv2 : MonoBehaviour
             cam.GetComponent<ScreenShake>().initialPos = cam.transform.position;
 
             //used to represent being hit
+            triggerComboTimer = false;
             tempVec = transform.position;
             hit = true;
             combCount = 0;
@@ -207,13 +219,14 @@ public class Playerv2 : MonoBehaviour
     }
     IEnumerator comboTimerV2(){
         triggerComboTimer = true;
+        endCombo = false;
         yield return new WaitForSeconds(comboTime);
-        if(inCombo){
-            inCombo = false;
-            triggerComboTimer = false;
+        //if(inCombo){
+            //inCombo = false;
+            //triggerComboTimer = false;
             endCombo = true;
             print("combo ends");
-        } 
+        //} 
     }
     // Take 3 keys in and identify which combo to trigger
     void comboHandlerFunc()
@@ -230,12 +243,13 @@ public class Playerv2 : MonoBehaviour
                 inCombo = false;
             }
             */
+            
             if(!triggerComboTimer){
                 StartCoroutine(comboTimerV2());
             }
-
+            
             //trigger quick time event (combo/trick system) and record input one by one using sequence
-            if (Input.GetKeyDown(keys[0]) || Input.GetKeyDown(keys[1]) || Input.GetKeyDown(keys[2]) || Input.GetKeyDown(keys[3]) || Input.GetKeyDown(keys[4]) || Input.GetKeyDown(keys[5]))
+            if (!endCombo && Input.GetKeyDown(keys[0]) || Input.GetKeyDown(keys[1]) || Input.GetKeyDown(keys[2]) || Input.GetKeyDown(keys[3]) || Input.GetKeyDown(keys[4]) || Input.GetKeyDown(keys[5]))
             {
                 if (Input.GetKeyDown(keys[0]))
                     sequence[sequenceCounter] = keys[0];
@@ -258,6 +272,9 @@ public class Playerv2 : MonoBehaviour
                     // Check if match any record
                     if (sequence[0] == Combo_JumpH[0] && sequence[1] == Combo_JumpH[1] && sequence[2] == Combo_JumpH[2])
                     {
+                        playerAnim.SetTrigger("Jump");
+                        StopCoroutine(comboTimerV2());
+                        endCombo = false;
                         //print("Jump High Combo Activated");
                         float groundDist = Mathf.Abs(transform.position.y - groundHeight);
                         if (isGrounded || groundDist <= jumpGroundThreshold)
@@ -268,6 +285,9 @@ public class Playerv2 : MonoBehaviour
                     }
                     else if (sequence[0] == Combo_JumpL[0] && sequence[1] == Combo_JumpL[1] && sequence[2] == Combo_JumpL[2])
                     {
+                        playerAnim.SetTrigger("Jump");
+                        StopCoroutine(comboTimerV2());
+                        endCombo = false;
                         //print("Jump Low Combo Activated");
                         float groundDist = Mathf.Abs(transform.position.y - groundHeight);
                         if (isGrounded || groundDist <= jumpGroundThreshold)
@@ -278,6 +298,9 @@ public class Playerv2 : MonoBehaviour
                     }
                     else if (sequence[0] == Combo_Crouch[0] && sequence[1] == Combo_Crouch[1] && sequence[2] == Combo_Crouch[2])
                     {
+                        playerAnim.SetBool("Crouch", true);
+                        StopCoroutine(comboTimerV2());
+                        endCombo = false;
                         //print("Crouch Combo Activated");
                         isCrouching = true;
                         crouchTimer = 0f;
@@ -310,15 +333,19 @@ public class Playerv2 : MonoBehaviour
                         comboMove = true;
                     }
                     inCombo = false;
+                    endCombo = false;
                     sequenceCounter = 0;
+                    triggerComboTimer = false;
                     //StopCoroutine(comboTimer());
                     //comboTimer = 0;
                 }
             }
-            else if (endCombo || Input.anyKeyDown && !Input.GetKeyDown(KeyCode.Mouse0) && !Input.GetKeyDown(KeyCode.Mouse1) && !Input.GetKeyDown(KeyCode.Mouse2) && !Input.GetKeyDown(KeyCode.Mouse3) && !Input.GetKeyDown(KeyCode.Mouse4) && !Input.GetKeyDown(KeyCode.Mouse5) && !Input.GetKeyDown(KeyCode.Mouse6))
+            else if (endCombo || (Input.anyKeyDown && !Input.GetKeyDown(KeyCode.Mouse0) && !Input.GetKeyDown(KeyCode.Mouse1) && !Input.GetKeyDown(KeyCode.Mouse2) && !Input.GetKeyDown(KeyCode.Mouse3) && !Input.GetKeyDown(KeyCode.Mouse4) && !Input.GetKeyDown(KeyCode.Mouse5) && !Input.GetKeyDown(KeyCode.Mouse6)))
             {
+                StopCoroutine(comboTimerV2());
                 endCombo = false;
                 inCombo = false;
+                triggerComboTimer = false;
                 sequenceCounter = 0;
                 combCount = 0;
                 comboText.color = Color.white;
@@ -424,6 +451,7 @@ public class Playerv2 : MonoBehaviour
                 Debug.Log("Crouch Ended");
                 crouchTimer = 0;
                 isCrouching = false;
+                playerAnim.SetBool("Crouch", false);
             }
         }
         else

@@ -29,8 +29,10 @@ public class Player2Controller : MonoBehaviour
 
     //Similar combo system like player1
     //bool inCombo = false;
-    float cooldown = 2f;
+    [SerializeField] float cooldown = 2f;
     float cdTimer = 0f;
+
+    bool canAttack = true;
    
 
 
@@ -61,12 +63,17 @@ public class Player2Controller : MonoBehaviour
         //}
     }
 
+    IEnumerator attackDelay(){
+        canAttack = false;
+        yield return new WaitForSeconds(cooldown);
+        canAttack = true;
+    }
     // Take 3 keys in and identify which combo to trigger
     void comboHandlerFunc()
     {
         //print(cdTimer + "/" + cooldown);
         //only trigger combo when cd is good
-        
+        /*
         if (cdTimer < cooldown)
             cdTimer += Time.fixedDeltaTime;
         else if (cdTimer > cooldown)
@@ -74,13 +81,12 @@ public class Player2Controller : MonoBehaviour
             cdTimer = cooldown;
             sequenceCounter = 0;
         }
-        
-        if (cdTimer == cooldown)
+        */
+        if (canAttack)
         {
             //trigger quick time event (combo/trick system) and record input one by one using sequence
             if (Input.GetKeyDown(keys[0]) || Input.GetKeyDown(keys[1]) || Input.GetKeyDown(keys[2]))
             {
-                
                 if (Input.GetKeyDown(keys[0])){
                     sequence[sequenceCounter] = keys[0];
                     comboDisplay.text += "L-";
@@ -100,14 +106,16 @@ public class Player2Controller : MonoBehaviour
 
                 if (sequenceCounter == sequence.Length)
                 {
-                    bool comboMatch = true;
+                    //bool comboMatch = true;
                     // Check if match any record
                     if (sequence[0] == Combo_Still[0] && sequence[1] == Combo_Still[1] && sequence[2] == Combo_Still[2] && sequence[3] == Combo_Still[3])
                     {
                         //print("Spawn flat obstacle");
                         cdTimer = 0f;
                         GameObject tempObs = Instantiate(obstacle, transform.position + new Vector3(0f, 0.75f, 0f), Quaternion.identity);
+                        tempObs.transform.Rotate(0,0,90);
                         comboDisplay.text = "";
+                        StartCoroutine(attackDelay());
                     }
                     else if (sequence[0] == Combo_Bouncy[0] && sequence[1] == Combo_Bouncy[1] && sequence[2] == Combo_Bouncy[2] && sequence[3] == Combo_Bouncy[3])
                     {
@@ -115,6 +123,7 @@ public class Player2Controller : MonoBehaviour
                         cdTimer = 0f;
                         GameObject tempObs = Instantiate(obstacle2, transform.position, Quaternion.identity);
                         comboDisplay.text = "";
+                        StartCoroutine(attackDelay());
                     }
                     else if (sequence[0] == Combo_Platform[0] && sequence[1] == Combo_Platform[1] && sequence[2] == Combo_Platform[2] && sequence[3] == Combo_Platform[3])
                     {
@@ -122,12 +131,13 @@ public class Player2Controller : MonoBehaviour
                         GameObject tempObs = Instantiate(obstacle3, transform.position, Quaternion.identity);
                         comboDisplay.text = "";
                         cdTimer = 0f;
+                        StartCoroutine(attackDelay());
                     }
                     else
                     {
                         // Bad combo input
                         print("Reset player 2 sequence");
-                        comboMatch = false;
+                        //comboMatch = false;
                         cdTimer = cooldown - 0.5f;
                         comboDisplay.text = "";
                     }

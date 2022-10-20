@@ -6,6 +6,8 @@ public class Enemy : MonoBehaviour
 {
     //the obstacle to be spawned
     [SerializeField] GameObject obstacle;
+    [SerializeField] GameObject bouncyObs;
+    [SerializeField] GameObject explosionObs;
 
     //controls how frequently the obstalce spawns (its a range)
     [HideInInspector] public static float minSpawnTime;
@@ -29,7 +31,22 @@ public class Enemy : MonoBehaviour
             //picks a random value between the specified range to be used to control when to spawn the object
             float spawnTime = Random.Range(minSpawnTime,maxSpawnTime);
             yield return new WaitForSeconds(spawnTime);
-            GameObject tempObs = Instantiate(obstacle, transform.position, Quaternion.identity);
+            int rando = Random.Range(0,2);
+            if(rando == 0)
+            {
+                GameObject tempObs = Instantiate(obstacle, transform.position, Quaternion.identity);
+                tempObs.transform.Rotate(0,0,90);
+            }
+            else if(rando == 1)
+            {
+                GameObject tempObs = Instantiate(bouncyObs, transform.position, Quaternion.identity);
+            }
+            else if(rando == 2)
+            {
+                //currently not being used
+                GameObject tempObs = Instantiate(explosionObs, transform.position, Quaternion.identity);
+            }
+            
         }
     }
 
