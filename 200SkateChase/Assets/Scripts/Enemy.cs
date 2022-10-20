@@ -13,6 +13,10 @@ public class Enemy : MonoBehaviour
     [HideInInspector] public static float minSpawnTime;
     [HideInInspector] public static float maxSpawnTime;
 
+    //player for distance
+    [SerializeField] Transform player;
+    private float distance;
+
     Animator playerAnim;
 
     void Start()
@@ -28,6 +32,21 @@ public class Enemy : MonoBehaviour
         StartCoroutine(SpawnObstacle());
     }
 
+    /*void Update()
+    {
+        distance = Vector3.Distance(player.position, transform.position);
+
+        if (distance <= 16f)
+            maxSpawnTime = 3;
+        if (distance <= 10f)
+            minSpawnTime = 1;
+        if (distance <= 6f)
+            maxSpawnTime = 2;
+        if (distance <= 3f)
+            maxSpawnTime = 1;
+
+    }*/
+
     IEnumerator SpawnObstacle(){
         //using a while true loop so that it does spawns forever
         while(true){
@@ -38,7 +57,7 @@ public class Enemy : MonoBehaviour
             if(rando == 0)
             {
                 playerAnim.SetTrigger("Throw");
-                GameObject tempObs = Instantiate(obstacle, transform.position, Quaternion.identity);
+                GameObject tempObs = Instantiate(obstacle, transform.position + new Vector3(0f, 0.75f, 0f), Quaternion.identity);
                 tempObs.transform.Rotate(0,0,90);
             }
             else if(rando == 1)

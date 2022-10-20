@@ -32,6 +32,15 @@ public class Playerv2 : MonoBehaviour
     private float crouchTimer = 0;
     //private float comboTimer = 0;
 
+    [Header("Sound Related")]
+    //get sound and audio related components
+    [SerializeField] AudioClip hurtSound;
+    [SerializeField] AudioClip comboSound;
+    [SerializeField] float pitchIncrement = 0.01f;
+
+    private AudioSource aS;
+    private float startingPitch = 1f;
+
     //sequence (combo) variables
     [Header("Sequence Variables")]
     private KeyCode[] keys = {KeyCode.Q, KeyCode.W, KeyCode.E, KeyCode.A, KeyCode.S, KeyCode.D};
@@ -70,6 +79,10 @@ public class Playerv2 : MonoBehaviour
         startinCamSize = cam.orthographicSize;
         startCamPos = cam.transform.position;
         playerAnim = GetComponent<Animator>();
+
+        //get audio source for hit sound
+        aS = this.GetComponent<AudioSource>();
+        aS.pitch = startingPitch;
     }
 
     void Update()
@@ -135,6 +148,10 @@ public class Playerv2 : MonoBehaviour
             //creates particle effect and then destroys the obstacle that hit the player
             Instantiate(explosionEffect, other.transform.position, Quaternion.identity);
             Destroy(other.gameObject);
+
+            //plays sound of player getting hit and reset combo sound pitch
+            aS.pitch = startingPitch;
+            aS.PlayOneShot(hurtSound);
         }
 
     }
@@ -313,6 +330,8 @@ public class Playerv2 : MonoBehaviour
                     if (comboMatch)
                     {
                         combCount++;
+                        aS.PlayOneShot(comboSound);
+                        aS.pitch += pitchIncrement;
                         if (combCount >= 1)
                         {
                             float tempColorVal = combCount * .1f; ;
@@ -387,7 +406,8 @@ public class Playerv2 : MonoBehaviour
     void checkGameOver(){
         if(transform.position.x < -18){
             print("GAME OVER");
-            if(SceneManager.GetActiveScene().name == "AIScene"){
+            PlayerPrefs.SetFloat("GameTime", Time.timeSinceLevelLoad);
+            if (SceneManager.GetActiveScene().name == "AIScene"){
                 SceneManager.LoadScene("GameOver");
             }
             else{
@@ -403,6 +423,7 @@ public class Playerv2 : MonoBehaviour
             int tempWinCount = PlayerPrefs.GetInt("Wins");
             tempWinCount++;
             PlayerPrefs.SetInt("Wins", tempWinCount);
+            PlayerPrefs.SetFloat("GameTime", Time.timeSinceLevelLoad);
             SceneManager.LoadScene("WinScreen");
         }
     }
