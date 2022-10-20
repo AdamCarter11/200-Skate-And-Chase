@@ -1847,7 +1847,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1020696379}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.0457, y: -2.45, z: 0}
+  m_LocalPosition: {x: 1.0457, y: -3, z: 0}
   m_LocalScale: {x: 30.090145, y: 3.8488, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -1922,7 +1922,7 @@ MonoBehaviour:
   maxVelocity: 10
   comboTime: 1.5
   crouchTime: 1
-  crouchPosY: -0.25
+  crouchPosY: -1.5
   crouchLerpCoef: 8
   dist: 0
   velocity: {x: 0, y: 0}

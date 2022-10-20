@@ -35,11 +35,13 @@ public class Player2Controller : MonoBehaviour
     bool canAttack = true;
 
     [SerializeField] GameObject timerFiller;
+    Animator playerAnim;
    
 
 
     void Start()
     {
+        playerAnim = GetComponent<Animator>();
         timerFiller.transform.localScale = new Vector3(1,1,1f);
         comboDisplay.text = "";
         /*gives us a default (useful for testing purposes)
@@ -116,6 +118,7 @@ public class Player2Controller : MonoBehaviour
                     // Check if match any record
                     if (sequence[0] == Combo_Still[0] && sequence[1] == Combo_Still[1] && sequence[2] == Combo_Still[2] && sequence[3] == Combo_Still[3])
                     {
+                        playerAnim.SetTrigger("Throw");
                         //print("Spawn flat obstacle");
                         cdTimer = 0f;
                         GameObject tempObs = Instantiate(obstacle, transform.position + new Vector3(0f, 0.75f, 0f), Quaternion.identity);
@@ -126,6 +129,7 @@ public class Player2Controller : MonoBehaviour
                     }
                     else if (sequence[0] == Combo_Bouncy[0] && sequence[1] == Combo_Bouncy[1] && sequence[2] == Combo_Bouncy[2] && sequence[3] == Combo_Bouncy[3])
                     {
+                        playerAnim.SetTrigger("Throw");
                         //print("Spawn bouncy obstacle");
                         cdTimer = 0f;
                         GameObject tempObs = Instantiate(obstacle2, transform.position, Quaternion.identity);
@@ -135,6 +139,7 @@ public class Player2Controller : MonoBehaviour
                     }
                     else if (sequence[0] == Combo_Platform[0] && sequence[1] == Combo_Platform[1] && sequence[2] == Combo_Platform[2] && sequence[3] == Combo_Platform[3])
                     {
+                        playerAnim.SetTrigger("Throw");
                         //print("Spawn Platform obstacle");
                         GameObject tempObs = Instantiate(obstacle3, transform.position, Quaternion.identity);
                         comboDisplay.text = "";

@@ -2188,8 +2188,9 @@ GameObject:
   - component: {fileID: 1509189575}
   - component: {fileID: 1509189577}
   - component: {fileID: 1509189576}
+  - component: {fileID: 1509189578}
   m_Layer: 5
-  m_Name: Title
+  m_Name: CyberSkate
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2247,7 +2248,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 1
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: GAME NAME
+  m_Text: CyberSkate
 --- !u!222 &1509189577
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -2256,6 +2257,21 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1509189574}
   m_CullTransparentMesh: 1
+--- !u!114 &1509189578
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1509189574}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e19747de3f5aca642ab2be37e372fb86, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_EffectColor: {r: 0, g: 1, b: 0.029981852, a: 0.5}
+  m_EffectDistance: {x: 1, y: -1}
+  m_UseGraphicAlpha: 1
 --- !u!1 &1747449563
 GameObject:
   m_ObjectHideFlags: 0
