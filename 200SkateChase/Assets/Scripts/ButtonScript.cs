@@ -51,6 +51,9 @@ public class ButtonScript : MonoBehaviour
     public void menuButton(){
         SceneManager.LoadScene("MainMenu");
     }
+    public void tutorialButton(){
+        SceneManager.LoadScene("Tutorial");
+    }
 
     //displays stats
     public void StatsButton(){

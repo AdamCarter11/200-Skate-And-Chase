@@ -33,11 +33,14 @@ public class Player2Controller : MonoBehaviour
     float cdTimer = 0f;
 
     bool canAttack = true;
+
+    [SerializeField] GameObject timerFiller;
    
 
 
     void Start()
     {
+        timerFiller.transform.localScale = new Vector3(1,1,1f);
         comboDisplay.text = "";
         /*gives us a default (useful for testing purposes)
         if (minSpawnTime == 0 || maxSpawnTime == 0)
@@ -61,6 +64,9 @@ public class Player2Controller : MonoBehaviour
         //} else if (Input.GetMouseButtonDown(1) && MouseClickInterval > 2)
         //{            
         //}
+        if(!canAttack){
+            timerFiller.transform.localScale = new Vector3(Mathf.Lerp(timerFiller.transform.localScale.x, 1, Time.deltaTime * cooldown), Mathf.Lerp(timerFiller.transform.localScale.x, 1, Time.deltaTime * cooldown), 1);
+        }
     }
 
     IEnumerator attackDelay(){
@@ -115,6 +121,7 @@ public class Player2Controller : MonoBehaviour
                         GameObject tempObs = Instantiate(obstacle, transform.position + new Vector3(0f, 0.75f, 0f), Quaternion.identity);
                         tempObs.transform.Rotate(0,0,90);
                         comboDisplay.text = "";
+                        timerFiller.transform.localScale = new Vector3(.1f,.1f,1f);
                         StartCoroutine(attackDelay());
                     }
                     else if (sequence[0] == Combo_Bouncy[0] && sequence[1] == Combo_Bouncy[1] && sequence[2] == Combo_Bouncy[2] && sequence[3] == Combo_Bouncy[3])
@@ -123,6 +130,7 @@ public class Player2Controller : MonoBehaviour
                         cdTimer = 0f;
                         GameObject tempObs = Instantiate(obstacle2, transform.position, Quaternion.identity);
                         comboDisplay.text = "";
+                        timerFiller.transform.localScale = new Vector3(.1f,.1f,1f);
                         StartCoroutine(attackDelay());
                     }
                     else if (sequence[0] == Combo_Platform[0] && sequence[1] == Combo_Platform[1] && sequence[2] == Combo_Platform[2] && sequence[3] == Combo_Platform[3])
@@ -131,6 +139,7 @@ public class Player2Controller : MonoBehaviour
                         GameObject tempObs = Instantiate(obstacle3, transform.position, Quaternion.identity);
                         comboDisplay.text = "";
                         cdTimer = 0f;
+                        timerFiller.transform.localScale = new Vector3(.1f,.1f,1f);
                         StartCoroutine(attackDelay());
                     }
                     else

@@ -26,4 +26,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/MainGameScenes/CoopGameOver.unity
     guid: 088e75b09098e3c4bb4b819b9dec9c88
+  - enabled: 1
+    path: Assets/Scenes/MainGameScenes/Tutorial.unity
+    guid: 0cdc7f401665ef94db2e3b743c119574
   m_configObjects: {}
