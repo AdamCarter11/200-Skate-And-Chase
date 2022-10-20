@@ -844,7 +844,7 @@ MonoBehaviour:
   cam: {fileID: 519420031}
   zoomIn: 4
   zoomOut: 6
-  knockbackVal: 1
+  knockbackVal: 2
   knockBackSpeed: 3
   moveForwardVal: 1
   moveForwardSpeed: 5
