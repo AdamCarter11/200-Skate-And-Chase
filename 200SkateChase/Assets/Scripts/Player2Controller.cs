@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
+using UnityEngine.UI;
 
 public class Player2Controller : MonoBehaviour
 {
@@ -20,6 +21,7 @@ public class Player2Controller : MonoBehaviour
     private KeyCode[] Combo_Bouncy = { KeyCode.Mouse0, KeyCode.Mouse1, KeyCode.Mouse0, KeyCode.Mouse2 };
     private KeyCode[] Combo_Platform = { KeyCode.Mouse1, KeyCode.Mouse1, KeyCode.Mouse2, KeyCode.Mouse0 };
     int sequenceCounter = 0;
+    [SerializeField] Text comboDisplay;
 
     //controls how frequently the obstacle spawns (its a range)
     [HideInInspector] public static float minSpawnTime;
@@ -34,6 +36,7 @@ public class Player2Controller : MonoBehaviour
 
     void Start()
     {
+        comboDisplay.text = "";
         /*gives us a default (useful for testing purposes)
         if (minSpawnTime == 0 || maxSpawnTime == 0)
         {
@@ -63,6 +66,7 @@ public class Player2Controller : MonoBehaviour
     {
         //print(cdTimer + "/" + cooldown);
         //only trigger combo when cd is good
+        
         if (cdTimer < cooldown)
             cdTimer += Time.fixedDeltaTime;
         else if (cdTimer > cooldown)
@@ -70,17 +74,27 @@ public class Player2Controller : MonoBehaviour
             cdTimer = cooldown;
             sequenceCounter = 0;
         }
+        
         if (cdTimer == cooldown)
         {
             //trigger quick time event (combo/trick system) and record input one by one using sequence
             if (Input.GetKeyDown(keys[0]) || Input.GetKeyDown(keys[1]) || Input.GetKeyDown(keys[2]))
             {
-                if (Input.GetKeyDown(keys[0]))
+                
+                if (Input.GetKeyDown(keys[0])){
                     sequence[sequenceCounter] = keys[0];
-                else if (Input.GetKeyDown(keys[1]))
+                    comboDisplay.text += "L-";
+                }
+                    
+                else if (Input.GetKeyDown(keys[1])){
                     sequence[sequenceCounter] = keys[1];
-                else if (Input.GetKeyDown(keys[2]))
+                    comboDisplay.text += "R-";
+                }
+                    
+                else if (Input.GetKeyDown(keys[2])){
                     sequence[sequenceCounter] = keys[2];
+                    comboDisplay.text += "M-";
+                }
                 sequenceCounter++;
                 print(sequenceCounter);
 
@@ -93,17 +107,20 @@ public class Player2Controller : MonoBehaviour
                         //print("Spawn flat obstacle");
                         cdTimer = 0f;
                         GameObject tempObs = Instantiate(obstacle, transform.position + new Vector3(0f, 0.75f, 0f), Quaternion.identity);
+                        comboDisplay.text = "";
                     }
                     else if (sequence[0] == Combo_Bouncy[0] && sequence[1] == Combo_Bouncy[1] && sequence[2] == Combo_Bouncy[2] && sequence[3] == Combo_Bouncy[3])
                     {
                         //print("Spawn bouncy obstacle");
                         cdTimer = 0f;
                         GameObject tempObs = Instantiate(obstacle2, transform.position, Quaternion.identity);
+                        comboDisplay.text = "";
                     }
                     else if (sequence[0] == Combo_Platform[0] && sequence[1] == Combo_Platform[1] && sequence[2] == Combo_Platform[2] && sequence[3] == Combo_Platform[3])
                     {
                         //print("Spawn Platform obstacle");
                         GameObject tempObs = Instantiate(obstacle3, transform.position, Quaternion.identity);
+                        comboDisplay.text = "";
                         cdTimer = 0f;
                     }
                     else
@@ -112,11 +129,7 @@ public class Player2Controller : MonoBehaviour
                         print("Reset player 2 sequence");
                         comboMatch = false;
                         cdTimer = cooldown - 0.5f;
-                    }
-
-                    if (comboMatch)
-                    {
-                        
+                        comboDisplay.text = "";
                     }
                     //inCombo = false;
                     sequenceCounter = 0;

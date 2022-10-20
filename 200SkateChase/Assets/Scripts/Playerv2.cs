@@ -29,7 +29,7 @@ public class Playerv2 : MonoBehaviour
     private bool isHoldingJump; 
     private float holdJumpTimer = 0;
     private float crouchTimer = 0;
-    private float comboTimer = 0;
+    //private float comboTimer = 0;
 
     //sequence (combo) variables
     [Header("Sequence Variables")]
@@ -55,7 +55,7 @@ public class Playerv2 : MonoBehaviour
     [SerializeField] float moveForwardSpeed;
     [SerializeField] GameObject explosionEffect;
     [SerializeField] Text comboText;
-    private bool hit = false, hitTimer = false, landed = false, comboMove = false;
+    private bool hit = false, hitTimer = false, landed = false, comboMove = false, triggerComboTimer = false, endCombo = false;
     Vector2 tempVec;
     private int combCount = 0;
     [SerializeField] GameObject enemyObj;
@@ -113,7 +113,7 @@ public class Playerv2 : MonoBehaviour
             tempVec = transform.position;
             hit = true;
             combCount = 0;
-            comboText.color = Color.black;
+            comboText.color = Color.white;
             comboText.text = "Combo: " + combCount;
             StartCoroutine(JumpDelay());
 
@@ -188,7 +188,7 @@ public class Playerv2 : MonoBehaviour
                     comboText.color = new Color(tempColorVal, tempColorVal, 0);
                 }
                 else{
-                    comboText.color = Color.black;
+                    comboText.color = Color.white;
                 }
                 comboText.text = "Combo: " + combCount;
                 tempVec = transform.position;
@@ -200,24 +200,38 @@ public class Playerv2 : MonoBehaviour
         {
             sequenceCounter = 0;
             combCount = 0;
-            comboText.color = Color.black;
+            comboText.color = Color.white;
             comboText.text = "Combo: " + combCount;
             print("Reset sequence");
         }
     }
-
+    IEnumerator comboTimerV2(){
+        triggerComboTimer = true;
+        yield return new WaitForSeconds(comboTime);
+        if(inCombo){
+            inCombo = false;
+            triggerComboTimer = false;
+            endCombo = true;
+            print("combo ends");
+        } 
+    }
     // Take 3 keys in and identify which combo to trigger
     void comboHandlerFunc()
     {
         if (inCombo)
         {
             //If do nothing end combo
+            /*
             comboTimer += Time.fixedDeltaTime;
             if (comboTimer >= comboTime)
             {
                 Debug.Log("Combo Ended with no Input");
                 comboTimer = 0;
                 inCombo = false;
+            }
+            */
+            if(!triggerComboTimer){
+                StartCoroutine(comboTimerV2());
             }
 
             //trigger quick time event (combo/trick system) and record input one by one using sequence
@@ -284,11 +298,11 @@ public class Playerv2 : MonoBehaviour
                             {
                                 tempColorVal = 1;
                             }
-                            comboText.color = new Color(tempColorVal, tempColorVal, 0);
+                            comboText.color = new Color(1, 1, tempColorVal);
                         }
                         else
                         {
-                            comboText.color = Color.black;
+                            comboText.color = Color.white;
                         }
                         comboText.text = "Combo: " + combCount;
                         tempVec = transform.position;
@@ -298,15 +312,16 @@ public class Playerv2 : MonoBehaviour
                     inCombo = false;
                     sequenceCounter = 0;
                     //StopCoroutine(comboTimer());
-                    comboTimer = 0;
+                    //comboTimer = 0;
                 }
             }
-            else if (Input.anyKeyDown && !Input.GetKeyDown(KeyCode.Mouse0) && !Input.GetKeyDown(KeyCode.Mouse1) && !Input.GetKeyDown(KeyCode.Mouse2) && !Input.GetKeyDown(KeyCode.Mouse3) && !Input.GetKeyDown(KeyCode.Mouse4) && !Input.GetKeyDown(KeyCode.Mouse5) && !Input.GetKeyDown(KeyCode.Mouse6))
+            else if (endCombo || Input.anyKeyDown && !Input.GetKeyDown(KeyCode.Mouse0) && !Input.GetKeyDown(KeyCode.Mouse1) && !Input.GetKeyDown(KeyCode.Mouse2) && !Input.GetKeyDown(KeyCode.Mouse3) && !Input.GetKeyDown(KeyCode.Mouse4) && !Input.GetKeyDown(KeyCode.Mouse5) && !Input.GetKeyDown(KeyCode.Mouse6))
             {
+                endCombo = false;
                 inCombo = false;
                 sequenceCounter = 0;
                 combCount = 0;
-                comboText.color = Color.black;
+                comboText.color = Color.white;
                 comboText.text = "Combo: " + combCount;
                 print("Reset sequence player 1");
                 //StopCoroutine(comboTimer());
@@ -338,14 +353,19 @@ public class Playerv2 : MonoBehaviour
             inCombo = true;
             print("Perform the combo now!");
             //StartCoroutine(comboTimer());
-            comboTimer = 0f;
+            //comboTimer = 0f;
         }
     }
 
     void checkGameOver(){
         if(transform.position.x < -18){
             print("GAME OVER");
-            SceneManager.LoadScene("GameOver");
+            if(SceneManager.GetActiveScene().name == "AIScene"){
+                SceneManager.LoadScene("GameOver");
+            }
+            else{
+                SceneManager.LoadScene("CoopGameOver");
+            }
         }
     }
 

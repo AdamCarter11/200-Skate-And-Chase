@@ -28,8 +28,8 @@ public class Parallax : MonoBehaviour
         pos.x -= realVel * Time.fixedDeltaTime;
 
         //resets the sprites position when getting too far
-        if(pos.x < - 40){
-            pos.x = 40;
+        if(pos.x < - 36.5f){
+            pos.x = 36.5f;
         }
         transform.position = pos;
     }

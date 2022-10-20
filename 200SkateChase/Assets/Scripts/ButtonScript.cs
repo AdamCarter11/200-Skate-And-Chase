@@ -44,7 +44,7 @@ public class ButtonScript : MonoBehaviour
     }
     //will be used for when we have a coop mode in
     public void CoopButton(){
-
+        SceneManager.LoadScene("CoopScene");
     }
 
     //used to go back to the menu
